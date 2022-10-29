@@ -271,8 +271,9 @@ var config = {
 
     // Recording
 
-    // Whether to enable file recording or not.
+    // DEPRECATED. Use recordingService.enabled instead.
     // fileRecordingsEnabled: false,
+
     // Enable the dropbox integration.
     // dropbox: {
     //     appKey: '<APP_KEY>' // Specify your app key here.
@@ -282,37 +283,76 @@ var config = {
     //     redirectURI:
     //          'https://jitsi-meet.example.com/subfolder/static/oauth.html'
     // },
-    // When integrations like dropbox are enabled only that will be shown,
-    // by enabling fileRecordingsServiceEnabled, we show both the integrations
-    // and the generic recording service (its configuration and storage type
-    // depends on jibri configuration)
+
+    // recordingService: {
+    //     // When integrations like dropbox are enabled only that will be shown,
+    //     // by enabling fileRecordingsServiceEnabled, we show both the integrations
+    //     // and the generic recording service (its configuration and storage type
+    //     // depends on jibri configuration)
+    //     enabled: false,
+
+    //     // Whether to show the possibility to share file recording with other people
+    //     // (e.g. meeting participants), based on the actual implementation
+    //     // on the backend.
+    //     sharingEnabled: false,
+
+    //     // Hide the warning that says we only store the recording for 24 hours.
+    //     hideStorageWarning: false
+    // },
+
+    // DEPRECATED. Use recordingService.enabled instead.
     // fileRecordingsServiceEnabled: false,
-    // Whether to show the possibility to share file recording with other people
-    // (e.g. meeting participants), based on the actual implementation
-    // on the backend.
+
+    // DEPRECATED. Use recordingService.sharingEnabled instead.
     // fileRecordingsServiceSharingEnabled: false,
 
     // Whether to enable live streaming or not.
     // liveStreamingEnabled: false,
 
-    // Transcription (in interface_config,
-    // subtitles and buttons can be configured)
+    // Local recording configuration.
+    // localRecording: {
+    //     // Whether to disable local recording or not.
+    //     disable: false,
+    //     // Whether to notify all participants when a participant is recording locally.
+    //     notifyAllParticipants: false
+    // },
+
+    // DEPRECATED. Use transcription.enabled instead.
     // transcribingEnabled: false,
 
-    // If true transcriber will use the application language.
-    // The application language is either explicitly set by participants in their settings or automatically
-    // detected based on the environment, e.g. if the app is opened in a chrome instance which is using french as its
-    // default language then transcriptions for that participant will be in french.
-    // Defaults to true.
+    // DEPRECATED. Use transcription.useAppLanguage instead.
     // transcribeWithAppLanguage: true,
 
-    // Transcriber language. This settings will only work if "transcribeWithAppLanguage" is explicitly set to false.
-    // Available languages can be found in
-    // ./src/react/features/transcribing/transcriber-langs.json.
+    // DEPRECATED. Use transcription.preferredLanguage instead.
     // preferredTranscribeLanguage: 'en-US',
 
-    // Enables automatic turning on captions when recording is started
+    // DEPRECATED. Use transcription.autoCaptionOnRecord instead.
     // autoCaptionOnRecord: false,
+
+    // Transcription options.
+    // transcription: {
+    //     // Whether the feature should be enabled or not.
+    //     enabled: false,
+
+    //     // If true transcriber will use the application language.
+    //     // The application language is either explicitly set by participants in their settings or automatically
+    //     // detected based on the environment, e.g. if the app is opened in a chrome instance which
+    //     // is using french as its default language then transcriptions for that participant will be in french.
+    //     // Defaults to true.
+    //     useAppLanguage: true,
+
+    //     // Transcriber language. This settings will only work if "useAppLanguage"
+    //     // is explicitly set to false.
+    //     // Available languages can be found in
+    //     // ./src/react/features/transcribing/transcriber-langs.json.
+    //     preferredLanguage: 'en-US',
+
+    //     // Disable start transcription for all participants.
+    //     disableStartForAll: false,
+
+    //     // Enables automatic turning on captions when recording is started
+    //     autoCaptionOnRecord: false
+    // },
 
     // Misc
 
@@ -559,6 +599,10 @@ var config = {
     //     // When 'true', it shows an intermediate page before joining, where the user can configure their devices.
     //     // This replaces `prejoinPageEnabled`.
     //     enabled: true,
+    //     // Hides the participant name editing field in the prejoin screen.
+    //     // If requireDisplayName is also set as true, a name should still be provided through
+    //     // either the jwt or the userInfo from the iframe api init object in order for this to have an effect.
+    //     hideDisplayName: false,
     //     // List of buttons to hide from the extra join options dropdown.
     //     hideExtraJoinButtons: ['no-audio', 'by-phone']
     // },
@@ -618,6 +662,7 @@ var config = {
     //    'chat',
     //    'closedcaptions',
     //    'desktop',
+    //    'dock-iframe'
     //    'download',
     //    'embedmeeting',
     //    'etherpad',
@@ -631,8 +676,6 @@ var config = {
     //    'linktosalesforce',
     //    'livestreaming',
     //    'microphone',
-    //    'mute-everyone',
-    //    'mute-video-everyone',
     //    'participants-pane',
     //    'profile',
     //    'raisehand',
@@ -646,6 +689,7 @@ var config = {
     //    'stats',
     //    'tileview',
     //    'toggle-camera',
+    //    'undock-iframe',
     //    'videoquality',
     //    '__end'
     // ],
@@ -772,7 +816,7 @@ var config = {
     // enableEmailInStats: false,
 
     // faceLandmarks: {
-    //     // Enables sharing your face cordinates. Used for centering faces within a video.
+    //     // Enables sharing your face coordinates. Used for centering faces within a video.
     //     enableFaceCentering: false,
 
     //     // Enables detecting face expressions and sharing data with other participants
@@ -781,11 +825,14 @@ var config = {
     //     // Enables displaying face expressions in speaker stats
     //     enableDisplayFaceExpressions: false,
 
+    //     // Enable rtc stats for face landmarks
+    //     enableRTCStats: false,
+
     //     // Minimum required face movement percentage threshold for sending new face centering coordinates data.
     //     faceCenteringThreshold: 10,
 
-    //     // Miliseconds for processing a new image capture in order to detect face coordinates if they exist.
-    //     captureInterval: 100
+    //     // Milliseconds for processing a new image capture in order to detect face coordinates if they exist.
+    //     captureInterval: 1000
     // },
 
     // Controls the percentage of automatic feedback shown to participants when callstats is enabled.
@@ -865,6 +912,10 @@ var config = {
         // The Amplitude APP Key:
         // amplitudeAPPKey: '<APP_KEY>'
 
+        // Obfuscates room name sent to analytics (amplitude, rtcstats)
+        // Default value is false.
+        // obfuscateRoomName: false,
+
         // Configuration for the rtcstats server:
         // By enabling rtcstats server every time a conference is joined the rtcstats
         // module connects to the provided rtcstatsEndpoint and sends statistics regarding
@@ -939,33 +990,22 @@ var config = {
     // chromeExtensionBanner: {
     //     // The chrome extension to be installed address
     //     url: 'https://chrome.google.com/webstore/detail/jitsi-meetings/kglhbbefdnlheedjiejgomgmfplipfeb',
+    //     edgeUrl: 'https://microsoftedge.microsoft.com/addons/detail/jitsi-meetings/eeecajlpbgjppibfledfihobcabccihn',
 
     //     // Extensions info which allows checking if they are installed or not
     //     chromeExtensionsInfo: [
     //         {
     //             id: 'kglhbbefdnlheedjiejgomgmfplipfeb',
     //             path: 'jitsi-logo-48x48.png'
+    //         },
+    //         // Edge extension info
+    //         {
+    //             id: 'eeecajlpbgjppibfledfihobcabccihn',
+    //             path: 'jitsi-logo-48x48.png'
     //         }
     //     ]
     // },
 
-    // Local Recording
-    //
-
-    // localRecording: {
-    // Enables local recording.
-    // Additionally, 'localrecording' (all lowercase) needs to be added to
-    // the `toolbarButtons`-array for the Local Recording button to show up
-    // on the toolbar.
-    //
-    //     enabled: true,
-    //
-
-    // The recording format, can be one of 'ogg', 'flac' or 'wav'.
-    //     format: 'flac'
-    //
-
-    // },
     // e2ee: {
     //   labels,
     //   externallyManagedKey: false
@@ -1011,7 +1051,8 @@ var config = {
     // Disables all invite functions from the app (share, invite, dial out...etc)
     // disableInviteFunctions: true,
 
-    // Disables storing the room name to the recents list
+    // Disables storing the room name to the recents list. When in an iframe this is ignored and
+    // the room is never stored in the recents list.
     // doNotStoreRoom: true,
 
     // Deployment specific URLs.
@@ -1108,22 +1149,24 @@ var config = {
     */
     // dynamicBrandingUrl: '',
 
-    // Options related to the breakout rooms feature.
-    // breakoutRooms: {
-    //     // Hides the add breakout room button. This replaces `hideAddRoomButton`.
-    //     hideAddRoomButton: false,
-    //     // Hides the auto assign participants button.
-    //     hideAutoAssignButton: false,
-    //     // Hides the participants pane footer menu.
-    //     hideFooterMenu: false,
-    //     // Hides the join breakout room button.
-    //     hideJoinRoomButton: false,
+    // Options related to the participants pane.
+    // participantsPane: {
     //     // Hides the moderator settings tab.
     //     hideModeratorSettingsTab: false,
     //     // Hides the more actions button.
     //     hideMoreActionsButton: false,
     //     // Hides the mute all button.
     //     hideMuteAllButton: false
+    // },
+
+    // Options related to the breakout rooms feature.
+    // breakoutRooms: {
+    //     // Hides the add breakout room button. This replaces `hideAddRoomButton`.
+    //     hideAddRoomButton: false,
+    //     // Hides the auto assign participants button.
+    //     hideAutoAssignButton: false,
+    //     // Hides the join breakout room button.
+    //     hideJoinRoomButton: false
     // },
 
     // When true the user cannot add more images to be used as virtual background.
@@ -1162,7 +1205,8 @@ var config = {
     //         'transcribing',
     //         'video-quality',
     //         'insecure-room',
-    //         'highlight-moment'
+    //         'highlight-moment',
+    //         'top-panel-toggle'
     //     ]
     // },
 
@@ -1298,7 +1342,6 @@ var config = {
     //     'liveStreaming.unavailableTitle', // shown when livestreaming service is not reachable
     //     'lobby.joinRejectedMessage', // shown when while in a lobby, user's request to join is rejected
     //     'lobby.notificationTitle', // shown when lobby is toggled and when join requests are allowed / denied
-    //     'localRecording.localRecording', // shown when a local recording is started
     //     'notify.chatMessages', // shown when receiving chat messages while the chat window is closed
     //     'notify.disconnected', // shown when a participant has left
     //     'notify.connectedOneMember', // show when a participant joined
@@ -1344,6 +1387,9 @@ var config = {
     //     'transcribing.failedToStart' // shown when transcribing fails to start
     // ],
 
+    // List of notifications to be disabled. Works in tandem with the above setting.
+    // disabledNotifications: [],
+
     // Prevent the filmstrip from autohiding when screen width is under a certain threshold
     // disableFilmstripAutohiding: false,
 
@@ -1354,7 +1400,14 @@ var config = {
 
     //     // Disables the stage filmstrip
     //     // (displaying multiple participants on stage besides the vertical filmstrip)
-    //     disableStageFilmstrip: false
+    //     disableStageFilmstrip: false,
+
+    //     // Disables the top panel (only shown when a user is sharing their screen).
+    //     disableTopPanel: false,
+
+    //     // The minimum number of participants that must be in the call for
+    //     // the top panel layout to be used.
+    //     minParticipantCountForTopPanel: 50
     // },
 
     // Tile view related config options.

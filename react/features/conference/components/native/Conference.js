@@ -13,6 +13,7 @@ import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
 import { TestConnectionInfo } from '../../../base/testing';
 import { ConferenceNotification, isCalendarEnabled } from '../../../calendar-sync';
 import { DisplayNameLabel } from '../../../display-name';
+import { BrandingImageBackground } from '../../../dynamic-branding';
 import {
     FILMSTRIP_SIZE,
     Filmstrip,
@@ -21,11 +22,14 @@ import {
 } from '../../../filmstrip';
 import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
+import { startKnocking } from '../../../lobby/actions.any';
 import { KnockingParticipantList } from '../../../lobby/components/native';
 import { getIsLobbyVisible } from '../../../lobby/functions';
 import { navigate }
     from '../../../mobile/navigation/components/conference/ConferenceNavigationContainerRef';
+import { shouldEnableAutoKnock } from '../../../mobile/navigation/functions';
 import { screen } from '../../../mobile/navigation/routes';
+import { setPictureInPictureEnabled } from '../../../mobile/picture-in-picture';
 import { Captions } from '../../../subtitles';
 import { setToolboxVisible } from '../../../toolbox/actions';
 import { Toolbox } from '../../../toolbox/components/native';
@@ -54,6 +58,11 @@ type Props = AbstractProps & {
      * Application's aspect ratio.
      */
     _aspectRatio: Symbol,
+
+    /**
+     * Branding styles for conference.
+     */
+    _brandingStyles: Object,
 
     /**
      * Wherther the calendar feature is enabled or not.
@@ -94,6 +103,11 @@ type Props = AbstractProps & {
     _largeVideoParticipantId: string,
 
     /**
+     * Local participant's display name.
+     */
+    _localParticipantDisplayName: string,
+
+    /**
      * Whether Picture-in-Picture is enabled.
      */
     _pictureInPictureEnabled: boolean,
@@ -108,6 +122,11 @@ type Props = AbstractProps & {
      * The indicator which determines whether the Toolbox is visible.
      */
     _toolboxVisible: boolean,
+
+    /**
+     * Indicates if we should auto-knock.
+     */
+    _shouldEnableAutoKnock: boolean,
 
     /**
      * Indicates whether the lobby screen should be visible.
@@ -173,6 +192,7 @@ class Conference extends AbstractConference<Props, State> {
      */
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this._onHardwareBackPress);
+        setPictureInPictureEnabled(true);
     }
 
     /**
@@ -181,10 +201,18 @@ class Conference extends AbstractConference<Props, State> {
      * @inheritdoc
      */
     componentDidUpdate(prevProps) {
-        const { _showLobby } = this.props;
+        const {
+            _shouldEnableAutoKnock,
+            _showLobby,
+            dispatch
+        } = this.props;
 
         if (!prevProps._showLobby && _showLobby) {
             navigate(screen.lobby.root);
+
+            if (_shouldEnableAutoKnock) {
+                dispatch(startKnocking());
+            }
         }
 
         if (prevProps._showLobby && !_showLobby) {
@@ -205,6 +233,7 @@ class Conference extends AbstractConference<Props, State> {
         BackHandler.removeEventListener('hardwareBackPress', this._onHardwareBackPress);
 
         clearTimeout(this._expandedLabelTimeout.current);
+        setPictureInPictureEnabled(false);
     }
 
     /**
@@ -214,10 +243,18 @@ class Conference extends AbstractConference<Props, State> {
      * @returns {ReactElement}
      */
     render() {
-        const { _fullscreenEnabled } = this.props;
+        const {
+            _brandingStyles,
+            _fullscreenEnabled
+        } = this.props;
 
         return (
-            <Container style = { styles.conference }>
+            <Container
+                style = { [
+                    styles.conference,
+                    _brandingStyles
+                ] }>
+                <BrandingImageBackground />
                 <StatusBar
                     barStyle = 'light-content'
                     hidden = { _fullscreenEnabled }
@@ -499,11 +536,16 @@ class Conference extends AbstractConference<Props, State> {
 function _mapStateToProps(state) {
     const { isOpen } = state['features/participants-pane'];
     const { aspectRatio, reducedUI } = state['features/base/responsive-ui'];
+    const { backgroundColor } = state['features/dynamic-branding'];
     const participantCount = getParticipantCount(state);
+    const brandingStyles = backgroundColor ? {
+        backgroundColor
+    } : undefined;
 
     return {
         ...abstractMapStateToProps(state),
         _aspectRatio: aspectRatio,
+        _brandingStyles: brandingStyles,
         _calendarEnabled: isCalendarEnabled(state),
         _connecting: isConnecting(state),
         _filmstripVisible: isFilmstripVisible(state),
@@ -513,6 +555,7 @@ function _mapStateToProps(state) {
         _largeVideoParticipantId: state['features/large-video'].participantId,
         _pictureInPictureEnabled: getFeatureFlag(state, PIP_ENABLED),
         _reducedUI: reducedUI,
+        _shouldEnableAutoKnock: shouldEnableAutoKnock(state),
         _showLobby: getIsLobbyVisible(state),
         _toolboxVisible: isToolboxVisible(state)
     };

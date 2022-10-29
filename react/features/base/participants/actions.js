@@ -10,15 +10,18 @@ import {
     LOCAL_PARTICIPANT_AUDIO_LEVEL_CHANGED,
     LOCAL_PARTICIPANT_RAISE_HAND,
     MUTE_REMOTE_PARTICIPANT,
+    OVERWRITE_PARTICIPANT_NAME,
+    OVERWRITE_PARTICIPANTS_NAMES,
     PARTICIPANT_ID_CHANGED,
     PARTICIPANT_JOINED,
     PARTICIPANT_KICKED,
     PARTICIPANT_LEFT,
     PARTICIPANT_UPDATED,
     PIN_PARTICIPANT,
+    RAISE_HAND_UPDATED,
     SCREENSHARE_PARTICIPANT_NAME_CHANGED,
     SET_LOADABLE_AVATAR_URL,
-    RAISE_HAND_UPDATED
+    SET_LOCAL_PARTICIPANT_RECORDING_STATUS
 } from './actionTypes';
 import {
     DISCO_REMOTE_CONTROL_FEATURE
@@ -515,14 +518,7 @@ export function createVirtualScreenshareParticipant(sourceName, local) {
     return (dispatch, getState) => {
         const state = getState();
         const ownerId = getVirtualScreenshareParticipantOwnerId(sourceName);
-        const owner = getParticipantById(state, ownerId);
-        const ownerName = owner.name;
-
-        if (!ownerName) {
-            logger.error(`Failed to create a screenshare participant for sourceName: ${sourceName}`);
-
-            return;
-        }
+        const ownerName = getParticipantDisplayName(state, ownerId);
 
         dispatch(participantJoined({
             conference: state['features/base/conference'].conference,
@@ -658,5 +654,51 @@ export function localParticipantAudioLevelChanged(level) {
     return {
         type: LOCAL_PARTICIPANT_AUDIO_LEVEL_CHANGED,
         level
+    };
+}
+
+/**
+ * Overwrites the name of the participant with the given id.
+ *
+ * @param {string} id - Participant id;.
+ * @param {string} name - New participant name.
+ * @returns {Object}
+ */
+export function overwriteParticipantName(id, name) {
+    return {
+        type: OVERWRITE_PARTICIPANT_NAME,
+        id,
+        name
+    };
+}
+
+/**
+ * Overwrites the names of the given participants.
+ *
+ * @param {Array<Object>} participantList - The list of participants to overwrite.
+ * @returns {Object}
+ */
+export function overwriteParticipantsNames(participantList) {
+    return {
+        type: OVERWRITE_PARTICIPANTS_NAMES,
+        participantList
+    };
+}
+
+/**
+ * Local video recording status for the local participant.
+ *
+ * @param {boolean} recording - If local recording is ongoing.
+ * @param {boolean} onlySelf - If recording only local streams.
+ * @returns {{
+ *     type: SET_LOCAL_PARTICIPANT_RECORDING_STATUS,
+ *     recording: boolean
+ * }}
+ */
+export function updateLocalRecordingStatus(recording, onlySelf) {
+    return {
+        type: SET_LOCAL_PARTICIPANT_RECORDING_STATUS,
+        recording,
+        onlySelf
     };
 }

@@ -59,7 +59,13 @@ type Props = {
     /**
      * Invoked to save changed settings.
      */
-    dispatch: Function
+    dispatch: Function,
+
+    /**
+     * Indicates whether the device selection dialog is displayed on the
+     * welcome page or not.
+     */
+    isDisplayedOnWelcomePage: boolean
 };
 
 /**
@@ -253,7 +259,7 @@ class SettingsDialog extends Component<Props> {
  * }}
  */
 function _mapStateToProps(state, ownProps) {
-    const { classes } = ownProps;
+    const { classes, isDisplayedOnWelcomePage } = ownProps;
     const configuredTabs = interfaceConfig.SETTINGS_SECTIONS || [];
 
     // The settings sections to display.
@@ -262,7 +268,8 @@ function _mapStateToProps(state, ownProps) {
     const moderatorTabProps = getModeratorTabProps(state);
     const { showModeratorSettings } = moderatorTabProps;
     const { showLanguageSettings, showNotificationsSettings, showPrejoinSettings } = moreTabProps;
-    const showMoreTab = showLanguageSettings || showNotificationsSettings || showPrejoinSettings;
+    const showMoreTab
+        = configuredTabs.includes('more') && (showLanguageSettings || showNotificationsSettings || showPrejoinSettings);
     const showProfileSettings
         = configuredTabs.includes('profile') && !state['features/base/config'].disableProfile;
     const showCalendarSettings
@@ -276,7 +283,7 @@ function _mapStateToProps(state, ownProps) {
             component: DeviceSelection,
             label: 'settings.devices',
             onMount: getAvailableDevices,
-            props: getDeviceSelectionDialogProps(state),
+            props: getDeviceSelectionDialogProps(state, isDisplayedOnWelcomePage),
             propsUpdateFunction: (tabState, newProps) => {
                 // Ensure the device selection tab gets updated when new devices
                 // are found by taking the new props and only preserving the
@@ -292,7 +299,7 @@ function _mapStateToProps(state, ownProps) {
                 };
             },
             styles: `settings-pane ${classes.settingsDialog} devices-pane`,
-            submit: submitDeviceSelectionTab
+            submit: newState => submitDeviceSelectionTab(newState, isDisplayedOnWelcomePage)
         });
     }
 

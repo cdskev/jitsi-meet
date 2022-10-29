@@ -116,6 +116,7 @@
     },
     "chromeExtensionBanner": {
         "buttonText": "نزِّل إضافة متصفح كروم",
+        "buttonTextEdge": "قم بتثبيت ملحق Edge",
         "close": "إغلق",
         "dontShowAgain": "لا ترني هذه مرة أخرى",
         "installExtensionText": "نزِّل الإضافة للدمج مع رزنامة غوغل ورزنامة أوفيس 365"
@@ -206,6 +207,9 @@
         "previewUnavailable": "المعاينة غير متاحة",
         "selectADevice": "اختر جهازًا",
         "testAudio": "اختبر الصوت"
+    },
+    "dialIn": {
+        "screenTitle": "ملخص الطلب"
     },
     "dialOut": {
         "statusMessage": "{{status}} الآن"
@@ -657,6 +661,8 @@
         "linkToSalesforceKey": "ربط هذا المُلتقى",
         "linkToSalesforceProgress": "جارٍ ربط الاجتماع بـ Salesforce ...",
         "linkToSalesforceSuccess": "تم ربط الاجتماع بـ Salesforce",
+        "localRecordingStarted": "بدأ {{name}} تسجيلًا محليًا.",
+        "localRecordingStopped": "أوقف {{name}} التسجيل المحلي.",
         "me": "أنا",
         "moderationInEffectCSDescription": "يرجى رفع اليد إذا كنت تريد مشاركة شاشتك.",
         "moderationInEffectCSTitle": "تم حظر مشاركة الشاشة من قبل المشرف",
@@ -812,6 +818,7 @@
         "initiated": "بدأ الاتصال",
         "joinAudioByPhone": "انضم مع صوت من الجوال",
         "joinMeeting": "انضم للمُلتقى",
+        "joinMeetingInLowBandwidthMode": "الانضمام في وضع النطاق الترددي المنخفض",
         "joinWithoutAudio": "انضم دون صوت",
         "keyboardShortcuts": "تفعيل اختصارات لوحة المفاتيح",
         "linkCopied": "نُسِخ الرابط",
@@ -887,6 +894,7 @@
         "limitNotificationDescriptionWeb": "نظرًا للضغط الكبير، سيقيَّد التسجيل إلى {{limit}} د، ولكن إن أردت التسجيل لمدة مفتوحة، جرِّب <a href={{url}} rel='noopener noreferrer' target='_blank'>{{app}}</a>.",
         "linkGenerated": "لقد أنشأنا رابطًا لتسجيلك.",
         "live": "مباشر",
+        "localRecordingWarning": "تأكد من تحديد علامة التبويب الحالية لاستخدام الفيديو والصوت الصحيحين. التسجيل محدود حاليًا بـ 1 كيغابايت ، أي حوالي 100 دقيقة.",
         "loggedIn": "مُسجَّل باسم {{userName}}",
         "off": "أوقِف التسجيل",
         "offBy": "أوقَف {{name}} التسجيل",
@@ -894,6 +902,7 @@
         "onBy": "بدأ {{name}} التسجيل",
         "pending": "التحضير لتسجيل المُلتقى...",
         "rec": "تسجيل",
+        "saveLocalRecording": "حفظ ملف التسجيل محليا",
         "serviceDescription": "ستحفظ خدمة التسجيل الفيديو المستجل",
         "serviceDescriptionCloud": "تسجيل سحابي",
         "serviceDescriptionCloudInfo": "يتم مسح المُلتقيات المسجلة تلقائيًا بعد 24 ساعة من وقت التسجيل.",
@@ -901,6 +910,7 @@
         "sessionAlreadyActive": "هذه الجلسة قيد التسجيل أو البث المباشر.",
         "signIn": "دخول",
         "signOut": "خروج",
+        "surfaceError": "الرجاء تحديد علامة التبويب الحالية.",
         "unavailable": "عجبًا! {{serviceName}} غير متاحة حاليًا. نعمل على حل المشكلة. حاول مرة أخرى لاحقًا.",
         "unavailableTitle": "التسجيل غير متاح",
         "uploadToCloud": "تحميل إلى السحابة"
@@ -943,6 +953,7 @@
         "playSounds": "تشغيل الصوت عند:",
         "reactions": "ردود فعل المُلتقى",
         "sameAsSystem": "مثل النظام ({{label}})",
+        "screenTitle": "إعدادات",
         "selectAudioOutput": "خرج الصوت",
         "selectCamera": "الكاميرا",
         "selectMic": "المجهار (المايكروفون)",
@@ -968,6 +979,7 @@
         "disableCrashReportingWarning": "أمتأكد من تعطيل تقارير الأعطال التقنية؟ ستسري الإعدادات الجديدة بعد إعادة تشغيل التطبيق",
         "disableP2P": "تعطيل وضع واحد شخص-لشخص",
         "displayName": "عرض الاسم",
+        "displayNamePlaceholderText": "على سبيل المثال: علي الحيدري",
         "email": "البريد الإلكتروني",
         "header": "الإعدادات",
         "profileSection": "الملف الشخصي",
@@ -1026,6 +1038,7 @@
             "chat": "اظهِر/اخفِ نافذة الدردشة",
             "clap": "تصفيق",
             "collapse": "قلّص",
+            "dock": "إرساء في النافذة الرئيسية",
             "document": "اظهِر/اخفِ الملف المشارك",
             "download": "نزِّل التطبيق",
             "embedMeeting": "ضمِّن المُلتقى",
@@ -1076,6 +1089,7 @@
             "tileView": "اظهِر/اخفِ عرض العنوان",
             "toggleCamera": "بدِّل الكاميرا",
             "toggleFilmstrip": "بدِّل وضع الشريط السينمائي (filmstrip)",
+            "undock": "فك في نافذة منفصلة",
             "videoblur": "استعمل/اخرج من وضع تغبيش خلفية الفيديو",
             "videomute": "بدِّل وضع اخفاء الفيديو"
         },
@@ -1092,6 +1106,7 @@
         "closeChat": "أغلق الدردشة",
         "closeReactionsMenu": "إغلاق قائمة ردود الفعل",
         "disableReactionSounds": "يمكنك تعطيل أصوات ردود الفعل لهذا المُلتقى",
+        "dock": "إرساء في النافذة الرئيسية",
         "documentClose": "أغلق الملف المشارك",
         "documentOpen": "افتح الملف المشارك",
         "download": "نزِّل التطبيق",
@@ -1160,6 +1175,7 @@
         "talkWhileMutedPopup": "أتحاول التحدث؟ المجهار مكتوم لديك.",
         "tileViewToggle": "بدِّل عنوان العرض",
         "toggleCamera": "بدِّل الكاميرا",
+        "undock": "فك في نافذة منفصلة",
         "videoSettings": "اعدادات الفيديو",
         "videomute": "استعمل / أوقف الكاميرا"
     },

@@ -43,10 +43,15 @@ export function openLogoutDialog(onLogout: Function) {
  *
  * @param {string} defaultTab - The tab in {@code SettingsDialog} that should be
  * displayed initially.
+ * @param {boolean} isDisplayedOnWelcomePage - Indicates whether the device selection dialog is displayed on the
+ * welcome page or not.
  * @returns {Function}
  */
-export function openSettingsDialog(defaultTab: string) {
-    return openDialog(SettingsDialog, { defaultTab });
+export function openSettingsDialog(defaultTab: string, isDisplayedOnWelcomePage: boolean) {
+    return openDialog(SettingsDialog, {
+        defaultTab,
+        isDisplayedOnWelcomePage
+    });
 }
 
 /**
@@ -186,6 +191,7 @@ export function submitSoundsTab(newState: Object): Function {
         const shouldNotUpdateReactionSounds = getModeratorTabProps(getState()).startReactionsMuted;
         const shouldUpdate = (newState.soundsIncomingMessage !== currentState.soundsIncomingMessage)
             || (newState.soundsParticipantJoined !== currentState.soundsParticipantJoined)
+            || (newState.soundsParticipantKnocking !== currentState.soundsParticipantKnocking)
             || (newState.soundsParticipantLeft !== currentState.soundsParticipantLeft)
             || (newState.soundsTalkWhileMuted !== currentState.soundsTalkWhileMuted)
             || (newState.soundsReactions !== currentState.soundsReactions);
@@ -194,6 +200,7 @@ export function submitSoundsTab(newState: Object): Function {
             const settingsToUpdate = {
                 soundsIncomingMessage: newState.soundsIncomingMessage,
                 soundsParticipantJoined: newState.soundsParticipantJoined,
+                soundsParticipantKnocking: newState.soundsParticipantKnocking,
                 soundsParticipantLeft: newState.soundsParticipantLeft,
                 soundsTalkWhileMuted: newState.soundsTalkWhileMuted,
                 soundsReactions: newState.soundsReactions

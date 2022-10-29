@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { openDialog } from '../../../base/dialog';
+import { openDialog, openSheet } from '../../../base/dialog';
 import JitsiScreen from '../../../base/modal/components/JitsiScreen';
 import { isLocalParticipantModerator } from '../../../base/participants';
 import { equals } from '../../../base/redux';
@@ -20,7 +20,7 @@ import {
 import { getKnockingParticipants } from '../../../lobby/functions';
 import MuteEveryoneDialog
     from '../../../video-menu/components/native/MuteEveryoneDialog';
-import { isFooterMenuVisible, isMoreActionsVisible, isMuteAllVisible } from '../../functions';
+import { isMoreActionsVisible, isMuteAllVisible } from '../../functions';
 import {
     AddBreakoutRoomButton,
     AutoAssignButton,
@@ -42,7 +42,7 @@ import styles from './styles';
 const ParticipantsPane = () => {
     const dispatch = useDispatch();
     const [ searchString, setSearchString ] = useState('');
-    const openMoreMenu = useCallback(() => dispatch(openDialog(ContextMenuMore)), [ dispatch ]);
+    const openMoreMenu = useCallback(() => dispatch(openSheet(ContextMenuMore)), [ dispatch ]);
     const isLocalModerator = useSelector(isLocalParticipantModerator);
     const muteAll = useCallback(() => dispatch(openDialog(MuteEveryoneDialog)),
         [ dispatch ]);
@@ -57,7 +57,6 @@ const ParticipantsPane = () => {
     const inBreakoutRoom = useSelector(isInBreakoutRoom);
     const showAddBreakoutRoom = useSelector(isAddBreakoutRoomButtonVisible);
     const showAutoAssign = useSelector(isAutoAssignParticipantsVisible);
-    const showFooterMenu = useSelector(isFooterMenuVisible);
     const showMoreActions = useSelector(isMoreActionsVisible);
     const showMuteAll = useSelector(isMuteAllVisible);
     const lobbyParticipants = useSelector(getKnockingParticipants);
@@ -88,7 +87,7 @@ const ParticipantsPane = () => {
                 showAddBreakoutRoom && <AddBreakoutRoomButton />
             }
             {
-                showFooterMenu
+                isLocalModerator
                 && <View style = { styles.participantsPaneFooter }>
                     {
                         showMuteAll && (

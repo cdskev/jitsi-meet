@@ -11,7 +11,7 @@ import { translate } from '../../../base/i18n';
 import { connect as reactReduxConnect } from '../../../base/redux';
 import { setColorAlpha } from '../../../base/util';
 import { Chat } from '../../../chat';
-import { MainFilmstrip, StageFilmstrip } from '../../../filmstrip';
+import { MainFilmstrip, StageFilmstrip, ScreenshareFilmstrip } from '../../../filmstrip';
 import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
 import { LobbyScreen } from '../../../lobby';
@@ -236,8 +236,13 @@ class Conference extends AbstractConference<Props, *> {
                         id = 'videospace'
                         onTouchStart = { this._onVidespaceTouchStart }>
                         <LargeVideo />
-                        <StageFilmstrip />
-                        <MainFilmstrip />
+                        {
+                            _showPrejoin || _showLobby || (<>
+                                <StageFilmstrip />
+                                <ScreenshareFilmstrip />
+                                <MainFilmstrip />
+                            </>)
+                        }
                     </div>
 
                     { _showPrejoin || _showLobby || <Toolbox /> }

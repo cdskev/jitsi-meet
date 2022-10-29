@@ -7,10 +7,10 @@ import { i18next } from '../../base/i18n';
 import { isStageFilmstripAvailable } from '../../filmstrip/functions';
 import { GRAVATAR_BASE_URL, isCORSAvatarURL } from '../avatar';
 import { getMultipleVideoSupportFeatureFlag, getSourceNameSignalingFeatureFlag } from '../config';
-import { JitsiParticipantConnectionStatus } from '../lib-jitsi-meet';
-import { MEDIA_TYPE, shouldRenderVideoTrack } from '../media';
+import { JitsiParticipantConnectionStatus, JitsiTrackStreamingStatus } from '../lib-jitsi-meet';
+import { shouldRenderVideoTrack } from '../media';
 import { toState } from '../redux';
-import { getScreenShareTrack, getTrackByMediaTypeAndParticipant } from '../tracks';
+import { getScreenShareTrack, getVideoTrackByParticipant } from '../tracks';
 import { createDeferred } from '../util';
 
 import { JIGASI_PARTICIPANT_ICON, MAX_DISPLAY_NAME_LENGTH, PARTICIPANT_ROLE } from './constants';
@@ -478,18 +478,27 @@ export function shouldRenderParticipantVideo(stateful: Object | Function, id: st
     }
 
     /* First check if we have an unmuted video track. */
-    const videoTrack
-        = getTrackByMediaTypeAndParticipant(state['features/base/tracks'], MEDIA_TYPE.VIDEO, id);
+    const videoTrack = getVideoTrackByParticipant(state['features/base/tracks'], participant);
 
     if (!shouldRenderVideoTrack(videoTrack, /* waitForVideoStarted */ false)) {
         return false;
     }
 
-    /* Then check if the participant connection is active. */
-    const connectionStatus = participant.connectionStatus || JitsiParticipantConnectionStatus.ACTIVE;
+    /* Then check if the participant connection or track streaming status is active. */
+    if (getSourceNameSignalingFeatureFlag(state)) {
+        // Note that this will work only if a listener is registered for the track's TrackStreamingStatus.
+        // The associated TrackStreamingStatusImpl instance is not created or disposed when there are zero listeners.
+        if (videoTrack
+            && !videoTrack.local
+            && videoTrack.jitsiTrack?.getTrackStreamingStatus() !== JitsiTrackStreamingStatus.ACTIVE) {
+            return false;
+        }
+    } else {
+        const connectionStatus = participant.connectionStatus || JitsiParticipantConnectionStatus.ACTIVE;
 
-    if (connectionStatus !== JitsiParticipantConnectionStatus.ACTIVE) {
-        return false;
+        if (connectionStatus !== JitsiParticipantConnectionStatus.ACTIVE) {
+            return false;
+        }
     }
 
     /* Then check if audio-only mode is not active. */

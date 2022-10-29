@@ -5,8 +5,6 @@ import {
     setAudioOutputDeviceId,
     setVideoInputDevice
 } from '../base/devices';
-import { isIosMobileBrowser } from '../base/environment/utils';
-import { browser } from '../base/lib-jitsi-meet';
 import { updateSettings } from '../base/settings';
 
 import { getDeviceSelectionDialogProps } from './functions';
@@ -16,19 +14,15 @@ import logger from './logger';
  * Submits the settings related to device selection.
  *
  * @param {Object} newState - The new settings.
+ * @param {boolean} isDisplayedOnWelcomePage - Indicates whether the device selection dialog is displayed on the
+ * welcome page or not.
  * @returns {Function}
  */
-export function submitDeviceSelectionTab(newState) {
-    // Always use the new track for mobile Safari because of https://bugs.webkit.org/show_bug.cgi?id=179363#c30. The
-    // old track is stopped by the browser when a new track is created for preview so it needs to be replaced even if
-    // the device selection doesn't change.
-    const replaceTrackAlways = isIosMobileBrowser() && browser.isVersionGreaterThan('15.3');
-
+export function submitDeviceSelectionTab(newState, isDisplayedOnWelcomePage) {
     return (dispatch, getState) => {
-        const currentState = getDeviceSelectionDialogProps(getState());
+        const currentState = getDeviceSelectionDialogProps(getState(), isDisplayedOnWelcomePage);
 
-        if ((newState.selectedVideoInputId && (newState.selectedVideoInputId !== currentState.selectedVideoInputId))
-            || replaceTrackAlways) {
+        if (newState.selectedVideoInputId && (newState.selectedVideoInputId !== currentState.selectedVideoInputId)) {
             dispatch(updateSettings({
                 userSelectedCameraDeviceId: newState.selectedVideoInputId,
                 userSelectedCameraDeviceLabel:
@@ -38,8 +32,7 @@ export function submitDeviceSelectionTab(newState) {
             dispatch(setVideoInputDevice(newState.selectedVideoInputId));
         }
 
-        if ((newState.selectedAudioInputId && newState.selectedAudioInputId !== currentState.selectedAudioInputId)
-            || replaceTrackAlways) {
+        if (newState.selectedAudioInputId && newState.selectedAudioInputId !== currentState.selectedAudioInputId) {
             dispatch(updateSettings({
                 userSelectedMicDeviceId: newState.selectedAudioInputId,
                 userSelectedMicDeviceLabel:

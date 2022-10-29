@@ -97,7 +97,7 @@ function getConfig(options = {}) {
     const { detectCircularDeps, minimize } = options;
 
     return {
-        devtool: 'source-map',
+        devtool: minimize ? 'source-map' : 'eval-source-map',
         mode: minimize ? 'production' : 'development',
         module: {
             rules: [ {
@@ -221,6 +221,7 @@ function getConfig(options = {}) {
             ],
             extensions: [
                 '.web.js',
+                '.web.ts',
 
                 // Typescript:
                 '.tsx',
@@ -281,7 +282,7 @@ module.exports = (_env, argv) => {
     const mode = typeof argv.mode === 'undefined' ? 'production' : argv.mode;
     const isProduction = mode === 'production';
     const configOptions = {
-        detectCircularDeps: Boolean(process.env.DETECT_CIRCULAR_DEPS) || !isProduction,
+        detectCircularDeps: Boolean(process.env.DETECT_CIRCULAR_DEPS),
         minimize: isProduction
     };
     const config = getConfig(configOptions);

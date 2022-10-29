@@ -106,13 +106,34 @@ class RTCStats {
     }
 
     /**
+     * Send the timestamp of the start of the conference, the data will be processed by the rtcstats-server
+     * and saved in the dump file.
+     *
+     * @param {Oject} timestamp - The object which contains the timestamp.
+     * @returns {void}
+     */
+    sendConferenceTimestamp(timestamp) {
+        this.trace && this.trace.statsEntry('conferenceStartTimestamp', null, timestamp);
+    }
+
+    /**
+     * Send videoType data, the data will be processed by rtcstats-server and saved in the dump file.
+     *
+     * @param {Object} videoTypeData - The object that holds the videoType data.
+     * @returns {void}
+     */
+    sendVideoTypeData(videoTypeData) {
+        this.trace && this.trace.statsEntry('setVideoType', null, videoTypeData);
+    }
+
+    /**
      * Send face expression data, the data will be processed by rtcstats-server and saved in the dump file.
      *
      * @param {Object} faceExpressionData - Face expression data to be saved in the rtcstats dump.
      * @returns {void}
      */
     sendFaceExpressionData(faceExpressionData) {
-        this.trace && this.trace.statsEntry('faceExpression', null, faceExpressionData);
+        this.trace && this.trace.statsEntry('faceLandmarks', null, faceExpressionData);
     }
 
     /**

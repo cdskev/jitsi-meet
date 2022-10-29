@@ -84,10 +84,9 @@ import { isDesktopShareButtonDisabled, isToolboxVisible } from '../../functions'
 import DownloadButton from '../DownloadButton';
 import HangupButton from '../HangupButton';
 import HelpButton from '../HelpButton';
-import MuteEveryoneButton from '../MuteEveryoneButton';
-import MuteEveryonesVideoButton from '../MuteEveryonesVideoButton';
 
 import AudioSettingsButton from './AudioSettingsButton';
+import DockIframeButton from './DockIframeButton';
 import FullscreenButton from './FullscreenButton';
 import LinkToSalesforceButton from './LinkToSalesforceButton';
 import OverflowMenuButton from './OverflowMenuButton';
@@ -95,6 +94,7 @@ import ProfileButton from './ProfileButton';
 import Separator from './Separator';
 import ShareDesktopButton from './ShareDesktopButton';
 import ToggleCameraButton from './ToggleCameraButton';
+import UndockIframeButton from './UndockIframeButton';
 import VideoSettingsButton from './VideoSettingsButton';
 
 /**
@@ -743,18 +743,6 @@ class Toolbox extends Component<Props> {
             group: 2
         };
 
-        const muteEveryone = {
-            key: 'mute-everyone',
-            Content: MuteEveryoneButton,
-            group: 2
-        };
-
-        const muteVideoEveryone = {
-            key: 'mute-video-everyone',
-            Content: MuteEveryonesVideoButton,
-            group: 2
-        };
-
         const shareVideo = {
             key: 'sharedvideo',
             Content: SharedVideoButton,
@@ -776,6 +764,18 @@ class Toolbox extends Component<Props> {
         const virtualBackground = !_screenSharing && {
             key: 'select-background',
             Content: VideoBackgroundButton,
+            group: 3
+        };
+
+        const dockIframe = {
+            key: 'dock-iframe',
+            Content: DockIframeButton,
+            group: 3
+        };
+
+        const undockIframe = {
+            key: 'undock-iframe',
+            Content: UndockIframeButton,
             group: 3
         };
 
@@ -839,12 +839,12 @@ class Toolbox extends Component<Props> {
             recording,
             livestreaming,
             linkToSalesforce,
-            muteEveryone,
-            muteVideoEveryone,
             shareVideo,
             shareAudio,
             etherpad,
             virtualBackground,
+            dockIframe,
+            undockIframe,
             speakerStats,
             settings,
             shortcuts,

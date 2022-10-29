@@ -5,7 +5,11 @@ import React, { Component } from 'react';
 import { MEDIA_TYPE } from '../../../base/media';
 import { getParticipantByIdOrUndefined, PARTICIPANT_ROLE } from '../../../base/participants';
 import { connect } from '../../../base/redux';
-import { getTrackByMediaTypeAndParticipant, isLocalTrackMuted, isRemoteTrackMuted } from '../../../base/tracks';
+import {
+    getVideoTrackByParticipant,
+    isLocalTrackMuted,
+    isRemoteTrackMuted
+} from '../../../base/tracks';
 import { getIndicatorsTooltipPosition } from '../../functions.web';
 
 import AudioMutedIndicator from './AudioMutedIndicator';
@@ -83,9 +87,9 @@ class StatusIndicators extends Component<Props> {
  * @param {Object} ownProps - The own props of the component.
  * @private
  * @returns {{
- *     _currentLayout: string,
+ *     _showAudioMutedIndicator: boolean,
  *     _showModeratorIndicator: boolean,
- *     _showVideoMutedIndicator: boolean
+ *     _showScreenShareIndicator: boolean
  * }}
 */
 function _mapStateToProps(state, ownProps) {
@@ -93,15 +97,15 @@ function _mapStateToProps(state, ownProps) {
 
     // Only the local participant won't have id for the time when the conference is not yet joined.
     const participant = getParticipantByIdOrUndefined(state, participantID);
-
     const tracks = state['features/base/tracks'];
+
     let isAudioMuted = true;
     let isScreenSharing = false;
 
     if (participant?.local) {
         isAudioMuted = isLocalTrackMuted(tracks, MEDIA_TYPE.AUDIO);
     } else if (!participant?.isFakeParticipant) { // remote participants excluding shared video
-        const track = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, participantID);
+        const track = getVideoTrackByParticipant(tracks, participant);
 
         isScreenSharing = track?.videoType === 'desktop';
         isAudioMuted = isRemoteTrackMuted(tracks, MEDIA_TYPE.AUDIO, participantID);

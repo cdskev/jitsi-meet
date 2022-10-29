@@ -40,7 +40,8 @@ import {
     isParticipantModerator,
     isLocalParticipantModerator,
     hasRaisedHand,
-    grantModerator
+    grantModerator,
+    overwriteParticipantsNames
 } from '../../react/features/base/participants';
 import { updateSettings } from '../../react/features/base/settings';
 import { isToggleCameraEnabled, toggleCamera } from '../../react/features/base/tracks';
@@ -427,6 +428,11 @@ function initCommands() {
             } catch (err) {
                 logger.error('Failed sending endpoint text message', err);
             }
+        },
+        'overwrite-names': participantList => {
+            logger.debug('Overwrite names command received');
+
+            APP.store.dispatch(overwriteParticipantsNames(participantList));
         },
         'toggle-e2ee': enabled => {
             logger.debug('Toggle E2EE key command received');
@@ -1456,6 +1462,22 @@ class API {
     }
 
     /**
+     * Notify external application (if API is enabled) that the iframe
+     * docked state has been changed. The responsibility for implementing
+     * the dock / undock functionality lies with the external application.
+     *
+     * @param {boolean} docked - Whether or not the iframe has been set to
+     * be docked or undocked.
+     * @returns {void}
+     */
+    notifyIframeDockStateChanged(docked: boolean) {
+        this._sendEvent({
+            name: 'iframe-dock-state-changed',
+            docked
+        });
+    }
+
+    /**
      * Notify external application of a participant, remote or local, being
      * removed from the conference by another participant.
      *
@@ -1657,6 +1679,32 @@ class API {
         this._sendEvent({
             name: 'browser-support',
             supported
+        });
+    }
+
+    /**
+     * Notify external application that the breakout rooms changed.
+     *
+     * @param {Array} rooms - Array of breakout rooms.
+     * @returns {void}
+     */
+    notifyBreakoutRoomsUpdated(rooms) {
+        this._sendEvent({
+            name: 'breakout-rooms-updated',
+            rooms
+        });
+    }
+
+    /**
+     * Notify the external application that the state of the participants pane changed.
+     *
+     * @param {boolean} open - Wether the panel is open or not.
+     * @returns {void}
+     */
+    notifyParticipantsPaneToggled(open) {
+        this._sendEvent({
+            name: 'participants-pane-toggled',
+            open
         });
     }
 
